@@ -8,7 +8,7 @@
         <router-view />
       </div>
     </div>
-    <menu-right />
+<!--    <menu-right />-->
   </main>
 </template>
 

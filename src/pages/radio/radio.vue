@@ -12,6 +12,7 @@ export default {
 
 <style lang="scss" scoped>
 .radio-page {
-  color: #fff;
+	padding-top: 100px;
+	color: #fff;
 }
 </style>

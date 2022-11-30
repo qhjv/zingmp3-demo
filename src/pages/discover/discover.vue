@@ -12,6 +12,7 @@ export default {
 
 <style lang="scss" scoped>
 .discover-page {
+	padding-top: 100px;
   color: #fff;
 }
 </style>
