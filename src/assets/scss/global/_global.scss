@@ -1,0 +1,104 @@
+:root {
+  --primaryColor: #069255;
+  --dangerColor: #da4838;
+  --grayColor: #e0e0e0;
+  --button-border-radius: 5px;
+  --disabledColor: #BDBDBD;
+  //light-mode
+  --color-white:#ffffff;
+  --color-black:#000000;
+}
+.dark-mode{
+  --color-white:#1E1F26;
+  --color-black:#000000;
+}
+::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background-color: #170F23;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background-color: #453b52;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+body{
+  transition: background-color 0.4s ease-in-out;
+}
+
+.disable-div {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+html {
+  font-family: "Roboto", sans-serif !important;
+}
+body {
+  font-family: Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif!important;
+  height: 100vh!important;
+}
+
+#app{
+  display: flex;
+  flex-direction: row;
+  height:100%;
+  max-width: 1920px;
+  margin: auto;
+}
+
+main#main-app{
+  height:100%;
+  flex: 1;
+  overflow: hidden;
+}
+h1,h2,h3,h4,h5,h6{
+  margin:0;
+}
+
+ul{
+  padding: 0;
+  li{
+    list-style: none;
+  }
+}
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #c4c4c4;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #c4c4c4;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #c4c4c4;
+}
+
+//autofill
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #ffffff ;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
