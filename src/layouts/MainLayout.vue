@@ -1,14 +1,14 @@
 <template>
   <main id="main-app" v-show="listLayout.includes('main')">
     <menu-left v-if="listLayout.includes('main-left')"></menu-left>
-    <Playing />
+    <Playing v-if="musicPlaying.length !== 0" :music="musicPlaying" />
     <div class="main-content relative" v-show="listLayout.includes('main-content')">
       <Header />
       <div class="wrapper relative w-full relative flex flex-col flex-1 overflow-auto">
         <router-view />
       </div>
     </div>
-<!--    <menu-right />-->
+    <menu-right />
   </main>
 </template>
 
@@ -17,6 +17,7 @@ import MenuLeft from '../components/menu-left/menuLeft.vue';
 import Header from '../components/header/header.vue';
 import MenuRight from '../components/menu-right/menuRight.vue';
 import Playing from '../components/playing/playing.vue';
+import { mapState } from 'vuex';
 
 const LAYOUTS = {
   main: ['main', 'main-left', 'main-content'],
@@ -38,6 +39,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      musicPlaying: (state) => state.playing.listPlaying || [],
+    }),
     listLayout() {
       return LAYOUTS[this.layout];
     },
