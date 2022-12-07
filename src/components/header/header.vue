@@ -55,41 +55,12 @@
           </svg>
         </div>
       </div>
-      <div class="header-search">
-        <div class="icon-search">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-              stroke="#dadada"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M22 22L20 20"
-              stroke="#dadada"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </div>
-
-        <div class="input-wrapper">
-          <input
-            type="text"
-            class="form-control z-input-placeholder"
-            placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
-            value=""
-          />
-        </div>
-      </div>
+      <InputSearch
+        :songs="songs"
+        @input-change="handleChangeValueSearch"
+        @play-music="handlePlayMusic"
+        v-click-outside="onClickOutSide"
+      />
     </div>
     <div class="header-right flex gap-4">
       <div class="header-circle header-theme">
@@ -188,10 +159,51 @@
 </template>
 
 <script>
+import InputSearch from './inputSearch.vue';
+import _, { debounce } from 'lodash';
+import ZingMp3Service from '../../services/songs.service.js';
+import { DATA_MOCK_MP3 } from '../../constants/index.js';
+
 export default {
-  components: {},
+  components: { InputSearch },
   mounted() {},
+  data() {
+    return {
+      songs: [],
+      debounceChangeValueSearch: null,
+    };
+  },
   computed: {},
+  created() {
+    this.debounceChangeValueSearch = debounce(this.handleChangeValue, 500);
+  },
+  methods: {
+    handleChangeValueSearch(value) {
+      this.debounceChangeValueSearch(value);
+    },
+    handlePlayMusic(song) {
+      this.$store.commit('playing/setPlaying', song);
+    },
+    onClickOutSide() {
+      this.songs = [];
+    },
+    async handleChangeValue(value) {
+      try {
+        const response = await ZingMp3Service.searchMusic({ keyword: value });
+        if (response.data?.msg === 'Success') {
+          this.songs =
+            response.data?.data?.songs?.map((song) => {
+              return {
+                ...song,
+                link: DATA_MOCK_MP3[_.random(0, DATA_MOCK_MP3.length - 1)] || '',
+              };
+            }) || [];
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 
@@ -220,40 +232,6 @@ export default {
   .header-left {
     z-index: 1;
     .header-button {
-    }
-    .header-search {
-      position: relative;
-      border-radius: 20px;
-      height: 40px;
-      width: 440px;
-      background: #2c2436;
-      .icon-search {
-        position: absolute;
-        cursor: pointer;
-        top: 48%;
-        transform: translateY(-50%);
-        left: 10px;
-      }
-      .input-wrapper {
-        position: absolute;
-        top: 48%;
-        transform: translateY(-50%);
-        left: 40px;
-        right: 10px;
-        color: var(--color-white);
-        input {
-          width: 100%;
-          background: transparent;
-          color: #ffffff;
-          &:active {
-            border: none;
-          }
-          &:focus-visible {
-            border: none;
-            outline: none;
-          }
-        }
-      }
     }
   }
   .header-right {

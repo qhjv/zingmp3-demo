@@ -8,7 +8,7 @@
         <router-view />
       </div>
     </div>
-    <menu-right />
+    <menu-right v-show="showListPlaying" :listMusic="musicPlaying" />
   </main>
 </template>
 
@@ -41,6 +41,7 @@ export default {
   computed: {
     ...mapState({
       musicPlaying: (state) => state.playing.listPlaying || [],
+      showListPlaying: (state) => state.playing.show || false,
     }),
     listLayout() {
       return LAYOUTS[this.layout];

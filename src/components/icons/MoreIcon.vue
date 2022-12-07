@@ -2,24 +2,30 @@
   <svg
     :width="width"
     :height="height"
-    viewBox="0 0 24 24"
+    viewBox="0 0 12 2"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M6 12C6 10.8954 5.10457 10 4 10C2.89543 10 2 10.8954 2 12C2 13.1046 2.89543 14 4 14C5.10457 14 6 13.1046 6 12Z"
+      d="M9.99646 1H10.0054"
       stroke="#fff"
-      stroke-width="1.5"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
     <path
-      d="M14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12Z"
+      d="M5.99548 1H6.00447"
       stroke="#fff"
-      stroke-width="1.5"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
     <path
-      d="M22 12C22 10.8954 21.1046 10 20 10C18.8954 10 18 10.8954 18 12C18 13.1046 18.8954 14 20 14C21.1046 14 22 13.1046 22 12Z"
+      d="M1.99451 1H2.00349"
       stroke="#fff"
-      stroke-width="1.5"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
   </svg>
 </template>

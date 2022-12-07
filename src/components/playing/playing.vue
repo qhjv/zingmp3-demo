@@ -2,11 +2,11 @@
   <div class="playing flex items-center cursor-pointer justify-between">
     <div class="col-1 flex items-center gap-3">
       <div class="playing-thumbnail img-center">
-        <img :src="music[0]?.thumbnail" alt="" />
+        <img :src="music[currentSong]?.thumbnail" alt="" />
       </div>
       <div class="playing-info">
-        <div class="playing-title">{{ music[0]?.title }}</div>
-        <div class="playing-artistsNames">{{ music[0]?.artistsNames }}</div>
+        <div class="playing-title">{{ music[currentSong]?.title }}</div>
+        <div class="playing-artistsNames">{{ music[currentSong]?.artistsNames }}</div>
       </div>
       <div class="playing-actions flex items-center gap-5 ml-8">
         <div class="button-factory cursor-pointer">
@@ -24,7 +24,7 @@
             <shuffle-icon />
           </div>
           <div class="action action-prev">
-            <prev-icon />
+            <prev-icon @click="prevSong" />
           </div>
           <div class="action action-pause" v-if="!currentlyPlaying" @click="playAudio">
             <pause-icon />
@@ -33,7 +33,7 @@
             <play-icon />
           </div>
           <div class="action action-next">
-            <next-icon />
+            <next-icon @click="nextSong" />
           </div>
           <div class="action action-repeat">
             <repeat-icon />
@@ -41,7 +41,7 @@
         </div>
         <div class="bar w-100 flex items-center justify-between gap-3">
           <span class="time left">{{ convertTimeMinutes(currentTime) }}</span>
-          <div class="progress-bar flex-1">
+          <div class="progress-bar flex-1" ref="progress">
             <input class="time-bar flex-1" type="range" min="0" step="1" @click="updateProgress" />
             <span class="progressbar__bg">
               <span class="progressbar__state" :style="{ width: currentProgressBar + '%' }"></span>
@@ -59,18 +59,19 @@
         <view-icon />
       </div>
       <div class="volume flex items-center justify-center">
-        <div class="icon-volume">
-          <volume-icon />
+        <div class="icon-volume" @click="isOnVolume = !isOnVolume">
+          <volume-icon v-if="isOnVolume" />
+          <volume-off-icon v-else />
         </div>
-        <div class="progress-bar w-[70px] ml-[10px] mb-[2px]">
-          <input class="time-bar w-[70px]" type="range" min="0" step="1" />
+        <div class="progress-bar w-[70px] ml-[10px] mb-[2px]" ref="volume">
+          <input class="time-bar w-[70px]" type="range" min="0" step="1" @click="updateVolume" />
           <span class="progressbar__bg">
-            <span class="progressbar__state" style="width: calc(0%)"></span>
+            <span class="progressbar__state" :style="{ width: volume * 100 + '%' }"></span>
           </span>
         </div>
       </div>
       <div class="line"></div>
-      <div class="list-playing-button pt-[1px]">
+      <div class="list-playing-button pt-[1px]" @click="handleClickShowListPlaying">
         <svg
           width="20"
           height="20"
@@ -103,11 +104,12 @@ import ViewIcon from '../icons/ViewIcon.vue';
 import HeartIcon from '../icons/HeartIcon.vue';
 import MoreIcon from '../icons/MoreIcon.vue';
 import { convertTime } from '../../utils/index.js';
+import VolumeOffIcon from '../icons/VolumeOffIcon.vue';
 export default {
   props: {
     music: {
       type: Object,
-      default: {},
+      default: [],
     },
   },
   data() {
@@ -122,9 +124,13 @@ export default {
       trackDuration: 0,
       currentProgressBar: 0,
       isPlaylistActive: false,
+      showListPlaying: this.$store.state.playing.show,
+      volume: 1,
+      isOnVolume: true,
     };
   },
   components: {
+    VolumeOffIcon,
     MoreIcon,
     HeartIcon,
     ViewIcon,
@@ -143,12 +149,16 @@ export default {
   },
   computed: {},
   methods: {
+    handleClickShowListPlaying() {
+      // this.showListPlaying = !this.showListPlaying;
+      // this.$store.commit('playing/toggleListPlaying', this.showListPlaying);
+    },
+
     convertTimeMinutes(value) {
       return convertTime(value);
     },
 
     changeSong(index) {
-      console.log(index);
       const wasPlaying = this.currentlyPlaying;
 
       if (index !== undefined) {
@@ -160,7 +170,6 @@ export default {
       this.audio = new Audio(this.audioFile);
       this.audio.addEventListener('loadedmetadata', () => {
         this.trackDuration = Math.round(this.audio.duration);
-        console.log(this.audio.duration);
       });
       this.audio.addEventListener('ended', this.handleEnded);
 
@@ -173,7 +182,6 @@ export default {
         this.currentlyPlaying = false;
         this.currentlyStopped = true;
       } else {
-        this.currentlyPlaying = false;
         this.currentSong++;
         this.changeSong();
         this.playAudio();
@@ -215,9 +223,37 @@ export default {
       if (this.currentSong > 0) this.changeSong(this.currentSong - 1);
     },
 
+    updateVolume(e) {
+      this.isOnVolume = true;
+      const x = e.pageX;
+      let progress = this.$refs.volume;
+      let position = x - progress.offsetLeft;
+      let percentage = position / progress.offsetWidth;
+      if (percentage > 1) {
+        percentage = 1;
+      }
+      if (percentage < 0) {
+        percentage = 0;
+      }
+      this.volume = percentage;
+    },
+
     updateProgress(e) {
       this.stopAudio();
-      console.log(e.pageX);
+      const x = e.pageX;
+      let progress = this.$refs.progress;
+      let position = x - progress.offsetLeft;
+      let percentage = (100 * position) / progress.offsetWidth;
+      if (percentage > 100) {
+        percentage = 100;
+      }
+      if (percentage < 0) {
+        percentage = 0;
+      }
+      this.currentProgressBar = percentage;
+      this.audio.currentTime = (this.trackDuration * percentage) / 100;
+      this.currentTime = this.audio.currentTime;
+      this.playAudio();
     },
 
     getCurrentTimeEverySecond: function (startStop) {
@@ -237,6 +273,18 @@ export default {
     },
     currentTime: function () {
       this.currentTime = Math.round(this.currentTime);
+    },
+    isOnVolume: function () {
+      this.volume = !this.isOnVolume ? 0 : 1;
+    },
+    volume: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal === 0) {
+          this.isOnVolume = false;
+        }
+        this.audio.volume = newVal;
+      },
     },
   },
 
@@ -312,7 +360,7 @@ export default {
 
   .playing-controls {
     .actions {
-      margin-bottom: 2px;
+      margin-bottom: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
