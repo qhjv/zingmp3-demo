@@ -67,6 +67,7 @@ main {
   display: flex;
   height: 100vh;
   .main-content {
+    min-width: 935px;
     display: flex;
     flex-direction: column;
     flex: 1;

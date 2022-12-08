@@ -71,7 +71,7 @@
       <PlayListSkeleton v-if="loadingPlaylist" />
       <div class="list-playlist flex items-center mt-[20px] justify-between gap-[20px]" v-else>
         <div class="list cursor-pointer" v-for="list in playList" :key="list.id">
-          <div class="list-playlist__img w-[220px] h-[220px] img-center rounded-lg">
+          <div class="list-playlist__img w-full h-full img-center rounded-lg">
             <img :src="list.thumbnail" alt="" />
           </div>
           <div class="list-playlist__name text-[14px] font-medium mt-[8px] text-ellipsis">

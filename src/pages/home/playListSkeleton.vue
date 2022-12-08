@@ -1,7 +1,7 @@
 <template>
   <div class="list-playlist flex items-center mt-[20px] justify-between gap-[20px]">
     <div class="list cursor-pointer" v-for="(i, index) in 5" :key="index">
-      <g-skeleton-image :width="220" :height="220" :active="true" />
+      <g-skeleton-image :height="viewPort && viewPort < 1000 ? 140 : 200" :active="true" />
 
       <div class="list-playlist__name text-[14px] font-medium mt-[8px] text-ellipsis">
         <g-skeleton-text :active="true" />
@@ -18,7 +18,26 @@ import { GSkeletonText, GSkeletonImage } from '../../components/elements/skeleto
 
 export default {
   components: { GSkeletonText, GSkeletonImage },
+  data() {
+    return {
+      viewPort: null,
+    };
+  },
+  computed: {},
+  mounted() {
+    this.getOffsetWidth();
+  },
+  methods: {
+    getOffsetWidth() {
+      const el = document.querySelector('.list-playlist');
+      this.viewPort = el.offsetWidth;
+    },
+  },
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.list {
+  width: 25%;
+}
+</style>
