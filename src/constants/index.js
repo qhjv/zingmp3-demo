@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:5000';
+export const BASE_URL = 'https://zing-mp3-demo.herokuapp.com/';
 
 export const DATA_MOCK_MP3 = [
   'https://s1.mp3.aka.zdn.vn/2372a0a374e29dbcc4f3/6344358420396209001?authen=exp=1670384943~acl=/2372a0a374e29dbcc4f3/*~hmac=74c943c3723927b3e78cc2a34b4c394a',
